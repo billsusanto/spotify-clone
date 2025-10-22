@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Plus, ArrowUpDown } from 'lucide-react';
 import Link from 'next/link';
+import PageLayout from '@/components/PageLayout';
 
 export default function LibraryPage() {
   const [activeTab, setActiveTab] = useState<'playlists' | 'artists' | 'albums'>('playlists');
@@ -86,61 +87,63 @@ export default function LibraryPage() {
   };
 
   return (
-    <div className="flex-1 bg-gradient-to-b from-spotify-darkgray to-black overflow-y-auto pb-32 lg:pb-24">
-      {/* Header */}
-      <div className="sticky top-0 z-20 bg-spotify-darkgray px-4 sm:px-6 lg:px-8 py-4">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl sm:text-3xl font-bold">Your Library</h1>
-          <button className="text-spotify-lightgray hover:text-white transition">
-            <Plus size={28} />
-          </button>
+    <PageLayout>
+      <div className="flex-1 bg-gradient-to-b from-spotify-darkgray to-black overflow-y-auto pb-32 lg:pb-24">
+        {/* Header */}
+        <div className="sticky top-0 z-20 bg-spotify-darkgray px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-2xl sm:text-3xl font-bold">Your Library</h1>
+            <button className="text-spotify-lightgray hover:text-white transition">
+              <Plus size={28} />
+            </button>
+          </div>
+
+          {/* Tabs */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              onClick={() => setActiveTab('playlists')}
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-sm sm:text-base font-medium transition ${
+                activeTab === 'playlists' ? 'bg-white text-black' : 'bg-spotify-gray text-white hover:bg-spotify-gray/80'
+              }`}
+            >
+              Playlists
+            </button>
+            <button
+              onClick={() => setActiveTab('artists')}
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-sm sm:text-base font-medium transition ${
+                activeTab === 'artists' ? 'bg-white text-black' : 'bg-spotify-gray text-white hover:bg-spotify-gray/80'
+              }`}
+            >
+              Artists
+            </button>
+            <button
+              onClick={() => setActiveTab('albums')}
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-sm sm:text-base font-medium transition ${
+                activeTab === 'albums' ? 'bg-white text-black' : 'bg-spotify-gray text-white hover:bg-spotify-gray/80'
+              }`}
+            >
+              Albums
+            </button>
+          </div>
         </div>
 
-        {/* Tabs */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          <button
-            onClick={() => setActiveTab('playlists')}
-            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-sm sm:text-base font-medium transition ${
-              activeTab === 'playlists' ? 'bg-white text-black' : 'bg-spotify-gray text-white hover:bg-spotify-gray/80'
-            }`}
-          >
-            Playlists
-          </button>
-          <button
-            onClick={() => setActiveTab('artists')}
-            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-sm sm:text-base font-medium transition ${
-              activeTab === 'artists' ? 'bg-white text-black' : 'bg-spotify-gray text-white hover:bg-spotify-gray/80'
-            }`}
-          >
-            Artists
-          </button>
-          <button
-            onClick={() => setActiveTab('albums')}
-            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-sm sm:text-base font-medium transition ${
-              activeTab === 'albums' ? 'bg-white text-black' : 'bg-spotify-gray text-white hover:bg-spotify-gray/80'
-            }`}
-          >
-            Albums
-          </button>
+        {/* Content */}
+        <div className="px-4 sm:px-6 lg:px-8 py-4">
+          {/* Sort Button */}
+          <div className="flex items-center justify-between mb-4">
+            <button className="flex items-center gap-2 text-spotify-lightgray hover:text-white transition text-sm">
+              <ArrowUpDown size={16} />
+              <span className="hidden sm:inline">Sort by: Recent</span>
+              <span className="sm:hidden">Sort</span>
+            </button>
+          </div>
+
+          {/* List */}
+          <div className="space-y-1">
+            {renderContent()}
+          </div>
         </div>
       </div>
-
-      {/* Content */}
-      <div className="px-4 sm:px-6 lg:px-8 py-4">
-        {/* Sort Button */}
-        <div className="flex items-center justify-between mb-4">
-          <button className="flex items-center gap-2 text-spotify-lightgray hover:text-white transition text-sm">
-            <ArrowUpDown size={16} />
-            <span className="hidden sm:inline">Sort by: Recent</span>
-            <span className="sm:hidden">Sort</span>
-          </button>
-        </div>
-
-        {/* List */}
-        <div className="space-y-1">
-          {renderContent()}
-        </div>
-      </div>
-    </div>
+    </PageLayout>
   );
 }
