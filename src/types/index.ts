@@ -32,12 +32,16 @@ export interface Playlist {
  */
 export interface Album {
   id: string | number;
-  title: string;
+  name: string;
   artist: string;
-  coverImage: string;
-  releaseDate: string;
-  tracks: Track[];
-  totalDuration: number;
+  imageUrl: string;
+  releaseYear: number;
+  trackCount: number;
+  tracks?: Track[];
+  title?: string;
+  coverImage?: string;
+  releaseDate?: string;
+  totalDuration?: number;
   label?: string;
   copyright?: string;
 }
