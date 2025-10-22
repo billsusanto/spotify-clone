@@ -71,6 +71,15 @@ export function formatCompactNumber(num: number): string {
 }
 
 /**
+ * Format number with commas for thousands separator
+ * @param num - Number to format
+ * @returns Formatted string with commas
+ */
+export function formatNumber(num: number): string {
+  return num.toLocaleString('en-US');
+}
+
+/**
  * Shuffle array using Fisher-Yates algorithm
  * @param array - Array to shuffle
  * @returns Shuffled array

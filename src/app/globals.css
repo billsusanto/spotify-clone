@@ -26,10 +26,6 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-  
   html {
     @apply scroll-smooth;
     -webkit-font-smoothing: antialiased;
