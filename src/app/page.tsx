@@ -15,7 +15,7 @@ export default function Home() {
 
   return (
     <div className="h-screen flex flex-col bg-black">
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative">
         <Sidebar />
         <MainContent setCurrentTrack={setCurrentTrack} />
       </div>
