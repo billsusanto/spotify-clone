@@ -8,12 +8,17 @@
 [build.environment]
   NODE_VERSION = "18"
   NPM_VERSION = "10"
+  NEXT_TELEMETRY_DISABLED = "1"
 
-# Redirect rules
+# Next.js specific settings
+[functions]
+  node_bundler = "esbuild"
+
+# Redirect rules for Next.js
 [[redirects]]
   from = "/*"
-  to = "/404.html"
-  status = 404
+  to = "/index.html"
+  status = 200
 
 # Headers for security
 [[headers]]
@@ -26,11 +31,6 @@
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
 
 # Cache static assets
-[[headers]]
-  for = "/static/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
 [[headers]]
   for = "/_next/static/*"
   [headers.values]
