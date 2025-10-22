@@ -1,17 +1,20 @@
-import { type ClassValue, clsx } from 'clsx';
+import { clsx, type ClassValue } from 'clsx';
 
 /**
- * Merges class names using clsx
+ * Utility function to merge class names
+ * Uses clsx to handle conditional classes
  */
 export function cn(...inputs: ClassValue[]) {
   return clsx(inputs);
 }
 
 /**
- * Formats seconds into MM:SS format
+ * Format seconds to MM:SS format
+ * @param seconds - Time in seconds
+ * @returns Formatted time string
  */
 export function formatTime(seconds: number): string {
-  if (isNaN(seconds) || seconds < 0) return '0:00';
+  if (!seconds || seconds < 0) return '0:00';
   
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
@@ -19,63 +22,43 @@ export function formatTime(seconds: number): string {
 }
 
 /**
- * Formats duration in seconds to a readable format
+ * Format duration in seconds to human-readable format
+ * @param seconds - Duration in seconds
+ * @returns Formatted duration string
  */
 export function formatDuration(seconds: number): string {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const secs = Math.floor(seconds % 60);
-  
-  if (hours > 0) {
-    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  }
-  return `${minutes}:${secs.toString().padStart(2, '0')}`;
+  return formatTime(seconds);
 }
 
 /**
- * Truncates text to a specified length
- */
-export function truncate(text: string, length: number): string {
-  if (text.length <= length) return text;
-  return text.substring(0, length) + '...';
-}
-
-/**
- * Generates a random ID
- */
-export function generateId(): string {
-  return Math.random().toString(36).substring(2, 11);
-}
-
-/**
- * Debounce function for search and other delayed actions
+ * Debounce function for search and input handlers
+ * @param func - Function to debounce
+ * @param wait - Wait time in milliseconds
+ * @returns Debounced function
  */
 export function debounce<T extends (...args: any[]) => any>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout | null = null;
-  
+
   return function executedFunction(...args: Parameters<T>) {
     const later = () => {
       timeout = null;
       func(...args);
     };
-    
-    if (timeout) clearTimeout(timeout);
+
+    if (timeout) {
+      clearTimeout(timeout);
+    }
     timeout = setTimeout(later, wait);
   };
 }
 
 /**
- * Formats number with commas (e.g., 1000000 => 1,000,000)
- */
-export function formatNumber(num: number): string {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
-
-/**
- * Converts number to compact format (e.g., 1000 => 1K, 1000000 => 1M)
+ * Format large numbers to compact notation (e.g., 1.2M, 5.3K)
+ * @param num - Number to format
+ * @returns Formatted string
  */
 export function formatCompactNumber(num: number): string {
   if (num >= 1000000) {
@@ -85,4 +68,18 @@ export function formatCompactNumber(num: number): string {
     return `${(num / 1000).toFixed(1)}K`;
   }
   return num.toString();
+}
+
+/**
+ * Shuffle array using Fisher-Yates algorithm
+ * @param array - Array to shuffle
+ * @returns Shuffled array
+ */
+export function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
 }
