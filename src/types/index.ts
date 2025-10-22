@@ -52,14 +52,15 @@ export interface Album {
 export interface Artist {
   id: string | number;
   name: string;
-  image: string;
+  imageUrl: string;
   verified: boolean;
   followers: number;
-  monthlyListeners: number;
+  monthlyListeners?: number;
   bio?: string;
-  genres: string[];
-  topTracks: Track[];
-  albums: Album[];
+  genres?: string[];
+  topTracks?: Track[];
+  albums?: Album[];
+  image?: string;
 }
 
 /**
@@ -68,8 +69,9 @@ export interface Artist {
 export interface Category {
   id: string | number;
   name: string;
-  icon: string;
+  imageUrl: string;
   color: string;
+  icon?: string;
 }
 
 /**
