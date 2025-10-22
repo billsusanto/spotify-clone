@@ -1,122 +1,118 @@
 'use client';
 
-import React from 'react';
-import { Play, MoreHorizontal, Clock, Heart } from 'lucide-react';
-import { useParams } from 'next/navigation';
+import React, { useState } from 'react';
+import { Play, Heart, MoreHorizontal, Clock } from 'lucide-react';
+import { motion } from 'framer-motion';
+import Sidebar from '@/components/Sidebar';
+import Player from '@/components/Player';
+import BottomNav from '@/components/BottomNav';
 import PageLayout from '@/components/PageLayout';
+import { TrackRow } from '@/components/ui/TrackRow';
+import { mockTracks, mockAlbums } from '@/lib/mockData';
+import { usePlayerStore } from '@/store/usePlayerStore';
 
-export default function AlbumPage() {
-  const params = useParams();
+export default function AlbumPage({ params }: { params: { id: string } }) {
+  const [isLiked, setIsLiked] = useState(false);
+  const { setCurrentTrack } = usePlayerStore();
+  
+  const album = mockAlbums.find(a => a.id === params.id) || mockAlbums[0];
+  const tracks = mockTracks.slice(0, album.trackCount);
 
-  const album = {
-    id: params.id,
-    name: 'After Hours',
-    artist: 'The Weeknd',
-    year: '2020',
-    totalTracks: 14,
-    duration: '56 min 16 sec',
-  };
-
-  const tracks = [
-    { id: 1, title: 'Alone Again', duration: '4:10' },
-    { id: 2, title: 'Too Late', duration: '3:59' },
-    { id: 3, title: 'Hardest To Love', duration: '3:31' },
-    { id: 4, title: 'Scared To Live', duration: '3:11' },
-    { id: 5, title: 'Snowchild', duration: '4:07' },
-    { id: 6, title: 'Escape From LA', duration: '5:55' },
-    { id: 7, title: 'Heartless', duration: '3:18' },
-    { id: 8, title: 'Faith', duration: '4:43' },
-    { id: 9, title: 'Blinding Lights', duration: '3:20' },
-    { id: 10, title: 'In Your Eyes', duration: '3:57' },
-    { id: 11, title: 'Save Your Tears', duration: '3:35' },
-    { id: 12, title: 'Repeat After Me', duration: '3:15' },
-    { id: 13, title: 'After Hours', duration: '6:01' },
-    { id: 14, title: 'Until I Bleed Out', duration: '3:10' },
-  ];
+  const totalDuration = tracks.reduce((acc, track) => acc + track.duration, 0);
+  const minutes = Math.floor(totalDuration / 60);
 
   return (
-    <PageLayout>
-      <div className="flex-1 bg-gradient-to-b from-red-900 via-spotify-darkgray to-black overflow-y-auto pb-32 lg:pb-24">
-        {/* Album Header */}
-        <div className="px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-end gap-4 sm:gap-6">
-            <div className="w-48 h-48 sm:w-56 sm:h-56 bg-spotify-gray rounded shadow-2xl flex-shrink-0 flex items-center justify-center text-8xl">
-              💿
-            </div>
-            <div className="flex-1">
-              <p className="text-xs sm:text-sm font-semibold mb-2">ALBUM</p>
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">{album.name}</h1>
-              <div className="flex items-center gap-2 text-sm sm:text-base">
-                <span className="font-semibold">{album.artist}</span>
-                <span>•</span>
-                <span>{album.year}</span>
-                <span>•</span>
-                <span>{album.totalTracks} songs</span>
-                <span className="hidden sm:inline">•</span>
-                <span className="hidden sm:inline text-spotify-lightgray">{album.duration}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="px-4 sm:px-6 lg:px-8 pb-6 flex items-center gap-6">
-          <button className="bg-spotify-green text-black rounded-full p-4 sm:p-5 hover:scale-105 transition">
-            <Play size={24} className="sm:w-7 sm:h-7 fill-current" />
-          </button>
-          <button className="text-spotify-lightgray hover:text-white transition">
-            <Heart size={32} />
-          </button>
-          <button className="text-spotify-lightgray hover:text-white transition">
-            <MoreHorizontal size={32} />
-          </button>
-        </div>
-
-        {/* Track List */}
-        <div className="px-4 sm:px-6 lg:px-8">
-          <div className="hidden sm:grid grid-cols-12 gap-4 px-4 py-2 border-b border-spotify-gray text-spotify-lightgray text-sm">
-            <div className="col-span-1">#</div>
-            <div className="col-span-9">TITLE</div>
-            <div className="col-span-2 flex items-center justify-end"><Clock size={16} /></div>
-          </div>
-          
-          <div className="mt-2">
-            {tracks.map((track, index) => (
-              <div
-                key={track.id}
-                className="group hover:bg-spotify-gray/50 transition-colors cursor-pointer rounded"
-              >
-                <div className="hidden sm:grid grid-cols-12 gap-4 px-4 py-3 items-center">
-                  <div className="col-span-1 text-spotify-lightgray group-hover:text-white">
-                    <span className="group-hover:hidden">{index + 1}</span>
-                    <Play size={16} className="hidden group-hover:block fill-current" />
-                  </div>
-                  <div className="col-span-9">
-                    <div className="font-semibold group-hover:text-spotify-green">{track.title}</div>
-                    <div className="text-sm text-spotify-lightgray">{album.artist}</div>
-                  </div>
-                  <div className="col-span-2 text-spotify-lightgray text-right">{track.duration}</div>
-                </div>
-
-                <div className="sm:hidden flex items-center gap-3 px-4 py-3">
-                  <span className="text-spotify-lightgray w-6">{index + 1}</span>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-semibold truncate text-sm">{track.title}</div>
-                    <div className="text-xs text-spotify-lightgray">{album.artist}</div>
-                  </div>
-                  <span className="text-xs text-spotify-lightgray">{track.duration}</span>
+    <div className="h-screen flex flex-col bg-black">
+      <div className="flex flex-1 overflow-hidden relative">
+        <Sidebar />
+        
+        <main className="flex-1 overflow-y-auto bg-gradient-to-b from-spotify-dark-gray via-spotify-dark-charcoal to-spotify-black">
+          {/* Album Header */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="px-4 md:px-8 pt-16 pb-6 bg-gradient-to-b from-spotify-purple/40 to-transparent"
+          >
+            <div className="flex flex-col md:flex-row gap-6 items-end">
+              <motion.img
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                src={album.imageUrl}
+                alt={album.name}
+                className="w-48 h-48 md:w-56 md:h-56 rounded shadow-2xl"
+              />
+              <div className="flex-1 space-y-4">
+                <span className="text-sm font-semibold uppercase tracking-wider">Album</span>
+                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white font-poppins">
+                  {album.name}
+                </h1>
+                <div className="flex items-center gap-2 text-sm">
+                  <img
+                    src={album.imageUrl}
+                    alt={album.artist}
+                    className="w-6 h-6 rounded-full"
+                  />
+                  <span className="font-semibold text-white hover:underline cursor-pointer">
+                    {album.artist}
+                  </span>
+                  <span className="text-spotify-light-gray">•</span>
+                  <span className="text-spotify-light-gray">{album.releaseYear}</span>
+                  <span className="text-spotify-light-gray">•</span>
+                  <span className="text-spotify-light-gray">
+                    {album.trackCount} songs, {minutes} min
+                  </span>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
+          </motion.div>
 
-        <div className="px-4 sm:px-6 lg:px-8 py-8">
-          <p className="text-xs sm:text-sm text-spotify-lightgray">
-            © {album.year} {album.artist}
-          </p>
-        </div>
+          {/* Action Bar */}
+          <div className="px-4 md:px-8 py-6 flex items-center gap-6">
+            <button
+              className="btn-play w-14 h-14"
+              onClick={() => {
+                if (tracks[0]) setCurrentTrack(tracks[0]);
+              }}
+              aria-label="Play album"
+            >
+              <Play className="h-6 w-6 fill-current" />
+            </button>
+            
+            <button
+              onClick={() => setIsLiked(!isLiked)}
+              className={`btn-icon ${
+                isLiked ? 'text-spotify-green' : 'text-spotify-light-gray'
+              }`}
+              aria-label={isLiked ? 'Remove from library' : 'Add to library'}
+            >
+              <Heart className={`h-8 w-8 ${isLiked ? 'fill-current' : ''}`} />
+            </button>
+
+            <button className="btn-icon" aria-label="More options">
+              <MoreHorizontal className="h-8 w-8" />
+            </button>
+          </div>
+
+          {/* Track List */}
+          <div className="px-4 md:px-8 pb-32">
+            <div className="space-y-1">
+              {tracks.map((track, index) => (
+                <TrackRow key={track.id} track={track} index={index} showAlbum={false} />
+              ))}
+            </div>
+
+            {/* Album Info */}
+            <div className="mt-12 text-sm text-spotify-light-gray">
+              <p className="mb-2">{new Date(album.releaseYear, 0).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+              <p>© {album.releaseYear} {album.artist}</p>
+            </div>
+          </div>
+        </main>
       </div>
-    </PageLayout>
+      
+      <Player />
+      <BottomNav />
+    </div>
   );
 }
