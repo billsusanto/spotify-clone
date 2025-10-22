@@ -54,41 +54,7 @@ export default function Player() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isPlaying, currentTime, currentTrack, repeatMode, nextTrack, setCurrentTime]);
-
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger if user is typing in an input
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-
-      switch(e.key.toLowerCase()) {
-        case ' ':
-          e.preventDefault();
-          togglePlay();
-          break;
-        case 'arrowright':
-          e.preventDefault();
-          setCurrentTime(Math.min(currentTrack?.duration || 0, currentTime + 10));
-          break;
-        case 'arrowleft':
-          e.preventDefault();
-          setCurrentTime(Math.max(0, currentTime - 10));
-          break;
-        case 'arrowup':
-          e.preventDefault();
-          setVolume(Math.min(100, volume + 10));
-          break;
-        case 'arrowdown':
-          e.preventDefault();
-          setVolume(Math.max(0, volume - 10));
-          break;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [togglePlay, currentTime, volume, currentTrack, setCurrentTime, setVolume]);
+  }, [isPlaying, currentTime, currentTrack, repeatMode]);
 
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!progressRef.current || !currentTrack) return;
@@ -99,15 +65,16 @@ export default function Player() {
     setCurrentTime(newTime);
   };
 
+  // Keyboard navigation for progress bar - Design Spec requirement
   const handleProgressKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (!currentTrack) return;
     
-    if (e.key === 'ArrowLeft') {
+    if (e.key === 'ArrowRight') {
       e.preventDefault();
-      setCurrentTime(Math.max(0, currentTime - 5));
-    } else if (e.key === 'ArrowRight') {
+      setCurrentTime(Math.min(currentTime + 10, currentTrack.duration));
+    } else if (e.key === 'ArrowLeft') {
       e.preventDefault();
-      setCurrentTime(Math.min(currentTrack.duration, currentTime + 5));
+      setCurrentTime(Math.max(currentTime - 10, 0));
     }
   };
 
@@ -130,7 +97,7 @@ export default function Player() {
   return (
     <div
       id="player"
-      className="fixed bottom-0 left-0 right-0 h-[90px] bg-spotify-dark-surface border-t border-spotify-dark-gray z-50"
+      className="fixed bottom-0 left-0 right-0 bg-spotify-dark-surface border-t border-spotify-dark-gray h-[90px] z-50"
       role="region"
       aria-label="Music player controls"
     >
@@ -141,12 +108,12 @@ export default function Player() {
         onClick={handleProgressClick}
         onKeyDown={handleProgressKeyDown}
         role="slider"
-        tabIndex={0}
         aria-label="Track progress, use arrow keys to seek"
         aria-valuemin={0}
         aria-valuemax={currentTrack.duration}
         aria-valuenow={currentTime}
         aria-valuetext={`${formatTime(currentTime)} of ${formatTime(currentTrack.duration)}`}
+        tabIndex={0}
       >
         <div
           className="h-full bg-white group-hover:bg-spotify-green transition-colors relative"
@@ -156,12 +123,12 @@ export default function Player() {
         </div>
       </div>
 
-      <div className="h-full grid grid-cols-3 gap-4 items-center px-4 pt-2">
+      <div className="grid grid-cols-3 gap-4 items-center h-full px-4">
         {/* Current Track Info */}
         <div className="flex items-center gap-3 min-w-0">
           <img
             src={currentTrack.albumArt}
-            alt={`${currentTrack.album} cover`}
+            alt={`${currentTrack.album} album cover`}
             className="h-14 w-14 rounded flex-shrink-0"
           />
           <div className="min-w-0 hidden sm:block">
@@ -174,13 +141,13 @@ export default function Player() {
           </div>
           <button
             onClick={() => setIsLiked(!isLiked)}
-            className={`ml-2 hidden md:block transition-colors ${
+            className={`ml-2 hidden md:block ${
               isLiked ? 'text-spotify-green' : 'text-spotify-light-gray hover:text-white'
             }`}
             aria-label={isLiked ? 'Remove from Liked Songs' : 'Add to Liked Songs'}
             aria-pressed={isLiked}
           >
-            <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} aria-hidden="true" />
+            <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
           </button>
         </div>
 
@@ -190,13 +157,13 @@ export default function Player() {
             {/* Shuffle */}
             <button
               onClick={toggleShuffle}
-              className={`hidden sm:flex btn-icon ${
+              className={`btn-icon hidden sm:flex ${
                 shuffle ? 'text-spotify-green' : 'text-spotify-light-gray'
               }`}
               aria-label="Toggle shuffle"
               aria-pressed={shuffle}
             >
-              <Shuffle className="h-4 w-4" aria-hidden="true" />
+              <Shuffle className="h-4 w-4" />
             </button>
 
             {/* Previous */}
@@ -205,19 +172,20 @@ export default function Player() {
               className="btn-icon text-white"
               aria-label="Skip to previous track"
             >
-              <SkipBack className="h-5 w-5 fill-current" aria-hidden="true" />
+              <SkipBack className="h-5 w-5 fill-current" />
             </button>
 
             {/* Play/Pause */}
             <button
               onClick={togglePlay}
-              className="bg-white text-black rounded-full p-2.5 hover:scale-105 transition-transform"
+              className="bg-white text-black rounded-full p-2 hover:scale-105 transition-transform"
               aria-label={isPlaying ? 'Pause' : 'Play'}
+              aria-pressed={isPlaying}
             >
               {isPlaying ? (
-                <Pause className="h-5 w-5 fill-current" aria-hidden="true" />
+                <Pause className="h-5 w-5 fill-current" />
               ) : (
-                <Play className="h-5 w-5 fill-current ml-0.5" aria-hidden="true" />
+                <Play className="h-5 w-5 fill-current" />
               )}
             </button>
 
@@ -227,52 +195,53 @@ export default function Player() {
               className="btn-icon text-white"
               aria-label="Skip to next track"
             >
-              <SkipForward className="h-5 w-5 fill-current" aria-hidden="true" />
+              <SkipForward className="h-5 w-5 fill-current" />
             </button>
 
             {/* Repeat */}
             <button
               onClick={toggleRepeat}
-              className={`hidden sm:flex btn-icon relative ${
+              className={`btn-icon hidden sm:flex relative ${
                 repeatMode !== 'off' ? 'text-spotify-green' : 'text-spotify-light-gray'
               }`}
-              aria-label={`Repeat ${repeatMode}`}
+              aria-label={`Repeat: ${repeatMode}`}
               aria-pressed={repeatMode !== 'off'}
             >
-              <Repeat className="h-4 w-4" aria-hidden="true" />
+              <Repeat className="h-4 w-4" />
               {repeatMode === 'track' && (
-                <span className="absolute -bottom-1 text-[8px] font-bold" aria-hidden="true">1</span>
+                <span className="absolute text-[8px] font-bold">1</span>
               )}
             </button>
           </div>
 
           {/* Time Display */}
           <div className="hidden sm:flex items-center gap-2 text-xs text-spotify-light-gray font-mono">
-            <span aria-label={`Current time ${formatTime(currentTime)}`}>{formatTime(currentTime)}</span>
-            <span aria-hidden="true">/</span>
-            <span aria-label={`Total duration ${formatTime(currentTrack.duration)}`}>{formatTime(currentTrack.duration)}</span>
+            <span>{formatTime(currentTime)}</span>
+            <span>/</span>
+            <span>{formatTime(currentTrack.duration)}</span>
           </div>
         </div>
 
         {/* Volume Control */}
         <div className="flex items-center justify-end gap-3">
           <button
-            className="hidden md:block text-spotify-light-gray hover:text-white transition-colors"
+            className="hidden md:block text-spotify-light-gray hover:text-white"
             aria-label="More options"
           >
-            <MoreHorizontal className="h-5 w-5" aria-hidden="true" />
+            <MoreHorizontal className="h-5 w-5" />
           </button>
           
           <div className="hidden md:flex items-center gap-2">
             <button
               onClick={toggleMute}
-              className="text-spotify-light-gray hover:text-white transition-colors"
+              className="text-spotify-light-gray hover:text-white"
               aria-label={isMuted ? 'Unmute' : 'Mute'}
+              aria-pressed={isMuted}
             >
               {isMuted || volume === 0 ? (
-                <VolumeX className="h-5 w-5" aria-hidden="true" />
+                <VolumeX className="h-5 w-5" />
               ) : (
-                <Volume2 className="h-5 w-5" aria-hidden="true" />
+                <Volume2 className="h-5 w-5" />
               )}
             </button>
             <input
@@ -281,17 +250,12 @@ export default function Player() {
               max="100"
               value={isMuted ? 0 : volume}
               onChange={handleVolumeChange}
-              className="w-24 h-1 bg-spotify-medium-gray rounded-lg appearance-none cursor-pointer
-                [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3
-                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white
-                hover:[&::-webkit-slider-thumb]:scale-110 [&::-webkit-slider-thumb]:transition-transform
-                [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full 
-                [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-0"
+              className="w-24"
               aria-label="Volume control slider"
               aria-valuemin={0}
               aria-valuemax={100}
               aria-valuenow={isMuted ? 0 : volume}
-              aria-valuetext={`Volume ${isMuted ? 0 : volume} percent`}
+              aria-valuetext={`Volume ${isMuted ? 0 : volume}%`}
             />
           </div>
         </div>
