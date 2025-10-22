@@ -18,9 +18,8 @@ export default function BottomNav() {
 
   return (
     <nav
-      className="md:hidden fixed bottom-0 left-0 right-0 bg-spotify-dark-charcoal border-t border-spotify-dark-gray z-40 h-14"
+      className="md:hidden fixed bottom-0 left-0 right-0 bg-spotify-dark-charcoal border-t border-spotify-dark-gray z-40 h-14 font-inter"
       aria-label="Bottom navigation"
-      role="navigation"
     >
       <div className="grid grid-cols-4 h-full">
         {navItems.map((item) => {
@@ -33,11 +32,10 @@ export default function BottomNav() {
               href={item.href}
               className={cn(
                 'flex flex-col items-center justify-center gap-1',
-                'transition-colors min-h-[44px]',
+                'transition-colors',
                 isActive ? 'text-white' : 'text-spotify-light-gray'
               )}
               aria-current={isActive ? 'page' : undefined}
-              aria-label={`${item.label}${isActive ? ' (current page)' : ''}`}
             >
               <Icon className="h-6 w-6" aria-hidden="true" />
               <span className="text-xs font-medium">{item.label}</span>
