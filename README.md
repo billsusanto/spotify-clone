@@ -1,23 +1,15 @@
 # Spotify Clone
 
-A modern Spotify clone built with Next.js 14, React, and Tailwind CSS.
+A modern Spotify clone built with Next.js, React, TypeScript, and Tailwind CSS.
 
 ## Features
 
-- 🎵 Browse playlists, albums, and artists
-- 🔍 Search functionality
-- 📱 Fully responsive design
-- 🎨 Spotify-inspired UI with dark mode
-- ⚡ Fast performance with Next.js
-- 🎹 Music player controls
-- 📚 Library management
-
-## Tech Stack
-
-- **Framework**: Next.js 14 (App Router)
-- **Styling**: Tailwind CSS
-- **Icons**: Lucide React
-- **Language**: JavaScript/React
+- 🎵 Clean and responsive UI matching Spotify's design
+- 🎨 Modern gradient backgrounds and smooth animations
+- 📱 Fully responsive layout
+- ⚡ Built with Next.js 14 for optimal performance
+- 🎨 Styled with Tailwind CSS
+- 🔥 TypeScript for type safety
 
 ## Getting Started
 
@@ -28,52 +20,47 @@ A modern Spotify clone built with Next.js 14, React, and Tailwind CSS.
 
 ### Installation
 
-1. Clone the repository:
-```bash
-git clone https://github.com/billsusanto/spotify-clone.git
-cd spotify-clone
-```
-
-2. Install dependencies:
 ```bash
 npm install
 ```
 
-3. Run the development server:
+### Development
+
 ```bash
 npm run dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Build for Production
+### Build
 
 ```bash
 npm run build
+```
+
+### Preview Production Build
+
+```bash
 npm start
 ```
 
-## Project Structure
+## Tech Stack
 
-```
-spotify-clone/
-├── src/
-│   ├── app/
-│   │   ├── layout.js
-│   │   ├── page.js
-│   │   └── globals.css
-│   ├── components/
-│   │   ├── Sidebar.js
-│   │   ├── Player.js
-│   │   ├── AlbumCard.js
-│   │   └── TrackList.js
-│   └── data/
-│       └── mockData.js
-├── public/
-├── tailwind.config.js
-├── next.config.mjs
-└── package.json
-```
+- **Framework**: Next.js 14
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Icons**: Lucide React
+- **Deployment**: Netlify
+
+## Features Implemented
+
+- ✅ Sidebar navigation
+- ✅ Main content area with playlists
+- ✅ Music player controls
+- ✅ Track listing with play functionality
+- ✅ Progress bar and volume control
+- ✅ Responsive design
+- ✅ Mock data for demonstration
 
 ## License
 
