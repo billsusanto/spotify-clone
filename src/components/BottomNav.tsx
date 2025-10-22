@@ -3,40 +3,46 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Search, Library } from 'lucide-react';
+import { Home, Search, Library, User } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-const BottomNav = () => {
+const navItems = [
+  { icon: Home, label: 'Home', href: '/' },
+  { icon: Search, label: 'Search', href: '/search' },
+  { icon: Library, label: 'Library', href: '/library' },
+  { icon: User, label: 'Profile', href: '/profile' },
+];
+
+export default function BottomNav() {
   const pathname = usePathname();
 
-  const navItems = [
-    { name: 'Home', icon: Home, href: '/' },
-    { name: 'Search', icon: Search, href: '/search' },
-    { name: 'Your Library', icon: Library, href: '/library' },
-  ];
-
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-black border-t border-spotify-gray z-50 pb-safe">
-      <div className="flex items-center justify-around h-16">
+    <nav
+      className="md:hidden fixed bottom-[90px] left-0 right-0 bg-spotify-dark-charcoal border-t border-spotify-dark-gray z-40"
+      aria-label="Bottom navigation"
+    >
+      <div className="grid grid-cols-4 h-14">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
-          
+
           return (
             <Link
-              key={item.name}
+              key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${
-                isActive ? 'text-white' : 'text-spotify-lightgray'
-              }`}
+              className={cn(
+                'flex flex-col items-center justify-center gap-1',
+                'transition-colors',
+                isActive ? 'text-white' : 'text-spotify-light-gray'
+              )}
+              aria-current={isActive ? 'page' : undefined}
             >
-              <Icon size={24} className={isActive ? 'fill-current' : ''} />
-              <span className="text-xs mt-1 font-medium">{item.name}</span>
+              <Icon className="h-6 w-6" />
+              <span className="text-xs font-medium">{item.label}</span>
             </Link>
           );
         })}
       </div>
     </nav>
   );
-};
-
-export default BottomNav;
+}

@@ -1,39 +1,44 @@
 'use client';
 
-import React, { ReactNode } from 'react';
-import Sidebar from './Sidebar';
-import Player from './Player';
-import BottomNav from './BottomNav';
+import React from 'react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface PageLayoutProps {
-  children: ReactNode;
-  currentTrack?: {
-    title: string;
-    artist: string;
-    album: string;
-    duration: number;
-  };
+  children: React.ReactNode;
+  showNavigation?: boolean;
+  className?: string;
 }
 
-const PageLayout: React.FC<PageLayoutProps> = ({ 
-  children, 
-  currentTrack = {
-    title: "Blinding Lights",
-    artist: "The Weeknd",
-    album: "After Hours",
-    duration: 200,
-  }
-}) => {
+export default function PageLayout({ children, showNavigation = true, className = '' }: PageLayoutProps) {
+  const router = useRouter();
+
   return (
-    <div className="h-screen flex flex-col bg-black">
-      <div className="flex flex-1 overflow-hidden relative">
-        <Sidebar />
+    <main className={`flex-1 overflow-y-auto bg-gradient-to-b from-spotify-dark-charcoal to-spotify-black ${className}`}>
+      {showNavigation && (
+        <div className="sticky top-0 z-10 bg-black/40 backdrop-blur-md px-8 py-4">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => router.back()}
+              className="btn-icon bg-black/60 hover:bg-black/80"
+              aria-label="Go back"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+            <button
+              onClick={() => router.forward()}
+              className="btn-icon bg-black/60 hover:bg-black/80"
+              aria-label="Go forward"
+            >
+              <ArrowRight className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+      )}
+      
+      <div className="px-4 md:px-8 py-6 pb-32">
         {children}
       </div>
-      <Player currentTrack={currentTrack} />
-      <BottomNav />
-    </div>
+    </main>
   );
-};
-
-export default PageLayout;
+}
