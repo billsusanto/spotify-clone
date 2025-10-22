@@ -41,9 +41,9 @@
     font-feature-settings: 'liga', 'calt';
   }
 
-  /* Custom Scrollbar */
+  /* Custom Scrollbar - Matching Design Spec */
   ::-webkit-scrollbar {
-    @apply w-3 h-3;
+    @apply w-2 h-2;
   }
 
   ::-webkit-scrollbar-track {
@@ -58,9 +58,20 @@
     @apply bg-spotify-light-gray;
   }
 
-  /* Focus visible for accessibility */
+  /* Thin scrollbar for sidebar */
+  .scrollbar-thin::-webkit-scrollbar {
+    @apply w-1.5;
+  }
+
+  /* Focus visible for accessibility - Design Spec: 2px solid #1DB954 */
   *:focus-visible {
     @apply outline-none ring-2 ring-spotify-green ring-offset-2 ring-offset-spotify-black;
+  }
+
+  /* Skip links for accessibility */
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50;
+    @apply bg-spotify-green text-black px-6 py-3 rounded-md font-semibold;
   }
 
   /* Reduced motion support */
@@ -97,14 +108,15 @@
     @apply disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
+  /* Primary Button - FIXED: correct padding order (py-3 px-8 = 12px 32px) with shadow-green */
   .btn-primary {
-    @apply btn bg-spotify-green text-black px-8 py-3 shadow-green;
+    @apply btn bg-spotify-green text-black py-3 px-8 shadow-green;
     @apply hover:bg-spotify-green-hover hover:scale-105;
     @apply active:scale-95 active:bg-spotify-green-active;
   }
 
   .btn-secondary {
-    @apply btn bg-transparent text-white border border-white/30 px-8 py-3;
+    @apply btn bg-transparent text-white border border-white/30 py-3 px-8;
     @apply hover:bg-white/10 hover:border-white/50;
   }
 
@@ -118,13 +130,14 @@
     @apply hover:text-white hover:bg-white/10 hover:scale-110;
   }
 
+  /* Play Button - with shadow-green-lg */
   .btn-play {
     @apply btn bg-spotify-green text-black w-12 h-12 p-0 shadow-green-lg;
     @apply hover:scale-105 hover:bg-spotify-green-hover;
     @apply active:scale-95;
   }
 
-  /* Card Styles */
+  /* Card Styles - FIXED: hover transform to -translate-y-1 (4px) */
   .card {
     @apply bg-spotify-dark-surface rounded-lg p-4 transition-all duration-normal;
   }
@@ -163,6 +176,57 @@
 
   .bg-gradient-overlay {
     @apply bg-gradient-to-b from-transparent to-black/80;
+  }
+
+  /* Volume Slider Styling - Added hover state */
+  input[type="range"] {
+    @apply appearance-none bg-transparent cursor-pointer;
+  }
+
+  input[type="range"]::-webkit-slider-track {
+    @apply h-1 bg-spotify-medium-gray rounded-lg;
+  }
+
+  input[type="range"]:hover::-webkit-slider-track {
+    @apply bg-spotify-light-gray;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    @apply appearance-none w-3 h-3 rounded-full bg-white;
+    @apply transition-transform hover:scale-110;
+    margin-top: -4px;
+  }
+
+  input[type="range"]::-moz-range-track {
+    @apply h-1 bg-spotify-medium-gray rounded-lg;
+  }
+
+  input[type="range"]:hover::-moz-range-track {
+    @apply bg-spotify-light-gray;
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    @apply w-3 h-3 rounded-full bg-white border-0;
+    @apply transition-transform hover:scale-110;
+  }
+
+  /* Progress Bar Styling */
+  .progress-bar {
+    @apply h-1 bg-spotify-medium-gray rounded-lg cursor-pointer group;
+  }
+
+  .progress-bar:hover {
+    @apply h-1.5;
+  }
+
+  .progress-bar-fill {
+    @apply h-full bg-white rounded-lg relative;
+    @apply group-hover:bg-spotify-green;
+  }
+
+  .progress-bar-thumb {
+    @apply absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full;
+    @apply opacity-0 group-hover:opacity-100 transition-opacity;
   }
 }
 
@@ -205,5 +269,29 @@
 
   .glass-dark {
     @apply bg-black/40 backdrop-blur-lg;
+  }
+
+  /* Screen reader only utility */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .focus\:not-sr-only:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
   }
 }
