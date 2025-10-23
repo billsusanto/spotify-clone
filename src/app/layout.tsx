@@ -20,9 +20,14 @@ export const metadata: Metadata = {
   description: "A modern, responsive Spotify clone built with Next.js, React, TypeScript, and Tailwind CSS. Experience premium music streaming with a sleek, accessible interface.",
   keywords: "spotify, music, streaming, playlist, audio, player, next.js, react",
   authors: [{ name: "Bill Susanto" }],
-  viewport: "width=device-width, initial-scale=1, maximum-scale=5",
-  themeColor: "#000000",
   manifest: "/manifest.json",
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: '#000000',
 };
 
 export default function RootLayout({
