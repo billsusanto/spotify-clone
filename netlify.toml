@@ -8,19 +8,20 @@
 [build.environment]
   NODE_VERSION = "18"
   NPM_VERSION = "10"
+  NPM_FLAGS = "--include=dev"
   NEXT_TELEMETRY_DISABLED = "1"
 
 # Next.js specific settings
 [functions]
   node_bundler = "esbuild"
 
-# Redirect rules for Next.js
+# Redirect rules for Next.js client-side routing
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Headers for security
+# Security Headers
 [[headers]]
   for = "/*"
   [headers.values]
@@ -29,8 +30,9 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Content-Security-Policy = "default-src 'self' 'unsafe-inline' 'unsafe-eval' https://images.unsplash.com; img-src 'self' https://images.unsplash.com data: blob:; font-src 'self' data:; style-src 'self' 'unsafe-inline';"
 
-# Cache static assets
+# Cache static assets aggressively
 [[headers]]
   for = "/_next/static/*"
   [headers.values]
@@ -49,5 +51,10 @@
 
 [[headers]]
   for = "*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, immutable"
+
+[[headers]]
+  for = "*.svg"
   [headers.values]
     Cache-Control = "public, max-age=604800, immutable"
